@@ -20,9 +20,10 @@ jobs:
             - name: Run
               run: npm install
               
+            - run: node download.js
+              
               env:
                 DOWNLOADURL: ${{ secrets.DOWNLOADURL }}
                 EMAILPASS: ${{ secrets.EMAILPASS }}
                 SENDEMAIL: ${{ secrets.SENDEMAIL }}
                 TOEMAIL: ${{ secrets.TOEMAIL }}
-            - run: node download.js
