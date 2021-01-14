@@ -4,6 +4,7 @@ const path = require("path");
 const progressStream = require('progress-stream');
 const nodemailer = require('nodemailer');
 
+console.log(process.env.DOWNLOADURL)
 //下载 的文件 地址
 let fileURL = process.env.DOWNLOADURL;
 //下载保存的文件路径
