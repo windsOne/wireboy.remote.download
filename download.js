@@ -27,6 +27,8 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 		let chunk = readstream.read(1024 * 1024 * 10);
 		while (null !== chunk) {
             patchIndex = patchIndex + 1;
+            console.log('read times:'+patchIndex)
+            console.log(fileSavePath+'.email_'+patchIndex);
             let emailFile = fs.createWriteStream(fileSavePath+'.email_'+patchIndex).on('finish',function(){
 
             })
