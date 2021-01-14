@@ -27,12 +27,12 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 		let chunk = readstream.read(1024 * 1024 * 10);
 		while (null !== chunk) {
             patchIndex = patchIndex + 1;
-            let emailFile = fs.createWriteStream(fileSavePath+".email").on('finish',function(){
+            let emailFile = fs.createWriteStream(fileSavePath+'.email_'+patchIndex).on('finish',function(){
 
             })
             emailFile.write(chunk);
             emailFile.end();
-            let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+".email");
+            let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,'remote download file(' + patchIndex + ')');
             console.log('Send Mail ' + patchIndex + 'times');
             console.log(path.basename(fileURL));
             transporter.sendMail(msg, (error, info) => {
@@ -113,20 +113,19 @@ var transporter = nodemailer.createTransport({
 
 console.log('SMTP Configured');
 
-var createEmailMessage = function(filename,filepath){
+var createEmailMessage = function(filename,filepath,subject){
     var message = {
         // Comma separated lsit of recipients 收件人用逗号间隔
         to: process.env.TOEMAIL,
     
         // Subject of the message 信息主题
-        subject:  'Nodemailer is unicode friendly',
+        subject:  subject,
     
         // plaintext body
-        text: 'Hello to myself~',
+        text: '请查阅附件',
     
         // Html body
-        html: '<p><b>Hello</b> to myself <img src= "cid:00001"/></p>' + 
-            '<p>Here\'s a nyan car for you as embedded attachment:<br/><img src="cid:00002"/></p>',
+        html: '<p>下载文件成功</p>',
     
         // Apple Watch specific HTML body 苹果手表指定HTML格式
         watchHtml: '<b>Hello</b> to myself',
