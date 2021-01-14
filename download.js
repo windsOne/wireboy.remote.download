@@ -4,6 +4,7 @@ const path = require("path");
 const progressStream = require('progress-stream');
 const nodemailer = require('nodemailer');
 
+
 //下载 的文件 地址
 let fileURL = process.env.DOWNLOADURL;
 //下载保存的文件路径
@@ -24,42 +25,42 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 	console.time('readtime');
     let patchIndex = 0;
 	readstream.on('readable', () => {
-        
+        {
+            console.log('start read');
+            let chunk = readstream.read(1024 * 1024 * 10);
+            while (null !== chunk) {
+                patchIndex = patchIndex + 1;
+                console.log('read times:'+patchIndex)
+                console.log(fileSavePath+'.email_'+patchIndex);
+                let emailFile = fs.createWriteStream(fileSavePath+'.email_'+patchIndex).on('finish',function(){
+    
+                })
+                emailFile.write(chunk);
+                emailFile.end();
+                let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,path.basename(fileURL) + '(' + patchIndex + ')');
+                console.log('Send Mail ' + patchIndex + ' times');
+                console.log(path.basename(fileURL));
+                var transporter = createTransporter();
+                transporter.sendMail(msg, (error, info) => {
+                    if (error) {
+                        console.log('Error occurred');
+                        console.log(error.message);
+                        return;
+                    }
+                    console.log('Message sent successfully!');
+                    console.log('Server responded with "%s"', info.response);
+                    transporter.close();
+                });
+    
+                chunk = readstream.read(1024 * 1024 * 10);
+            }
+            console.log('end read');
+        }
 	});
 	readstream.on('close', () => {
 		console.timeEnd('readtime');
     });
-    {
-        console.log('start read');
-		let chunk = readstream.read(1024 * 1024 * 10);
-		while (null !== chunk) {
-            patchIndex = patchIndex + 1;
-            console.log('read times:'+patchIndex)
-            console.log(fileSavePath+'.email_'+patchIndex);
-            let emailFile = fs.createWriteStream(fileSavePath+'.email_'+patchIndex).on('finish',function(){
-
-            })
-            emailFile.write(chunk);
-            emailFile.end();
-            let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,path.basename(fileURL) + '(' + patchIndex + ')');
-            console.log('Send Mail ' + patchIndex + ' times');
-            // console.log(path.basename(fileURL));
-            var transporter = createTransporter();
-            transporter.sendMail(msg, (error, info) => {
-                if (error) {
-                    console.log('Error occurred');
-                    console.log(error.message);
-                    return;
-                }
-                console.log('Message sent successfully!');
-                console.log('Server responded with "%s"', info.response);
-                transporter.close();
-            });
-
-			chunk = readstream.read(1024 * 1024 * 10);
-        }
-        console.log('end read');
-    }
+    
 });
 //请求文件
 fetch(fileURL, {
