@@ -5,8 +5,10 @@ const progressStream = require('progress-stream');
 const nodemailer = require('nodemailer');
 
 
-//下载 的文件 地址
-let fileURL = process.env.DOWNLOADURL;
+//下载 的文件 地址 （https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi）
+let fileURL = 'https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi';
+
+
 //下载保存的文件路径
 let fileSavePath = path.join(__dirname, path.basename(fileURL));
 //缓存文件路径
@@ -27,7 +29,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 	readstream.on('readable', () => {
         {
             console.log('start read');
-            let chunk = readstream.read(1024 * 1024 * 10);
+            let chunk = readstream.read(1024 * 1024 * 15);
             while (null !== chunk) {
                 patchIndex = patchIndex + 1;
                 console.log('read times:'+patchIndex)
