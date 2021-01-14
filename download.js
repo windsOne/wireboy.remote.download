@@ -108,8 +108,7 @@ var message = {
     text: 'Hello to myself~',
 
     // Html body
-    html: '<p><b>Hello</b> to myself <img src= "cid:00001"/></p>' + 
-        '<p>Here\'s a nyan car for you as embedded attachment:<br/><img src="cid:00002"/></p>',
+    html: '<p>成功下载文件</p>',
 
     // Apple Watch specific HTML body 苹果手表指定HTML格式
     watchHtml: '<b>Hello</b> to myself',
