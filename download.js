@@ -24,6 +24,12 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 	console.time('readtime');
     let patchIndex = 0;
 	readstream.on('readable', () => {
+        
+	});
+	readstream.on('close', () => {
+		console.timeEnd('readtime');
+    });
+    {
         console.log('start read');
 		let chunk = readstream.read(1024 * 1024 * 10);
 		while (null !== chunk) {
@@ -35,7 +41,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
             })
             emailFile.write(chunk);
             emailFile.end();
-            let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,'remote download file(' + patchIndex + ')');
+            let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,path.basename(fileURL) + '(' + patchIndex + ')');
             console.log('Send Mail ' + patchIndex + ' times');
             // console.log(path.basename(fileURL));
             var transporter = createTransporter();
@@ -53,10 +59,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 			chunk = readstream.read(1024 * 1024 * 10);
         }
         console.log('end read');
-	});
-	readstream.on('close', () => {
-		console.timeEnd('readtime');
-	});
+    }
 });
 //请求文件
 fetch(fileURL, {
