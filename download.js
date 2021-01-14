@@ -23,6 +23,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 	let i = 0;
 	console.time('readtime');
 	readstream.on('readable', () => {
+        console.log('start read');
         let patchIndex = 0;
 		let chunk = readstream.read(1024 * 1024 * 10);
 		while (null !== chunk) {
