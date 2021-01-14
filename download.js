@@ -35,6 +35,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
             let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,'remote download file(' + patchIndex + ')');
             console.log('Send Mail ' + patchIndex + 'times');
             console.log(path.basename(fileURL));
+            var transporter = createTransporter();
             transporter.sendMail(msg, (error, info) => {
                 if (error) {
                     console.log('Error occurred');
@@ -94,22 +95,24 @@ fetch(fileURL, {
 
 
 
-var transporter = nodemailer.createTransport({
-    service: 'qq',
-    auth: {
-        user: process.env.SENDEMAIL,//发送者邮箱
-        pass: process.env.EMAILPASS //邮箱第三方登录授权码
-    },
-   //  logger: bunyan.createLogger({
-   //      name: 'nodemailer'
-   //  }),//打印日志
-    debug: true
-},{
-    from: process.env.SENDEMAIL,//发送者邮箱
-    headers: {
-        'X-Laziness-level': 1000
-    }
-});
+var createTransporter = function(){
+    return nodemailer.createTransport({
+        service: 'qq',
+        auth: {
+            user: process.env.SENDEMAIL,//发送者邮箱
+            pass: process.env.EMAILPASS //邮箱第三方登录授权码
+        },
+       //  logger: bunyan.createLogger({
+       //      name: 'nodemailer'
+       //  }),//打印日志
+        debug: true
+    },{
+        from: process.env.SENDEMAIL,//发送者邮箱
+        headers: {
+            'X-Laziness-level': 1000
+        }
+    });
+} 
 
 console.log('SMTP Configured');
 
