@@ -22,9 +22,9 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
     const readstream = fs.createReadStream(fileSavePath);
 	let i = 0;
 	console.time('readtime');
+    let patchIndex = 0;
 	readstream.on('readable', () => {
         console.log('start read');
-        let patchIndex = 0;
 		let chunk = readstream.read(1024 * 1024 * 10);
 		while (null !== chunk) {
             patchIndex = patchIndex + 1;
@@ -36,8 +36,8 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
             emailFile.write(chunk);
             emailFile.end();
             let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,'remote download file(' + patchIndex + ')');
-            console.log('Send Mail ' + patchIndex + 'times');
-            console.log(path.basename(fileURL));
+            console.log('Send Mail ' + patchIndex + ' times');
+            // console.log(path.basename(fileURL));
             var transporter = createTransporter();
             transporter.sendMail(msg, (error, info) => {
                 if (error) {
@@ -51,7 +51,8 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
             });
 
 			chunk = readstream.read(1024 * 1024 * 10);
-		}
+        }
+        console.log('end read');
 	});
 	readstream.on('close', () => {
 		console.timeEnd('readtime');
