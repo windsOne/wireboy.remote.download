@@ -39,7 +39,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
                 emailFile.write(chunk);
                 emailFile.end();
                 let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,path.basename(fileURL) + '(' + patchIndex + ')');
-                console.log('Send Mail ' + patchIndex + ' times, attachment:' + patchIndex + '_' + path.basename(fileURL));
+                console.log('Send Mail ' + patchIndex + '_' + path.basename(fileURL));
                 var transporter = createTransporter();
                 transporter.sendMail(msg, (error, info) => {
                     if (error) {
@@ -47,7 +47,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
                         console.log(error.message);
                         return;
                     }
-                    console.log('attachment sent successfully! ' + msg.attachments[0].filename);
+                    console.log(msg.attachments[0].filename + ' sent successfully! ' + );
                     // console.log('Server responded with "%s"', info.response);
                     transporter.close();
                 });
