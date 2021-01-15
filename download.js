@@ -28,20 +28,18 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
     let patchIndex = 0;
 	readstream.on('readable', () => {
         {
-            console.log('start read');
             let chunk = readstream.read(1024 * 1024 * 15);
             while (null !== chunk) {
                 patchIndex = patchIndex + 1;
-                console.log('read times:'+patchIndex)
-                console.log(fileSavePath+'.email_'+patchIndex);
+                // console.log('read times:'+patchIndex)
+                // console.log(fileSavePath+'.email_'+patchIndex);
                 let emailFile = fs.createWriteStream(fileSavePath+'.email_'+patchIndex).on('finish',function(){
     
                 })
                 emailFile.write(chunk);
                 emailFile.end();
                 let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,path.basename(fileURL) + '(' + patchIndex + ')');
-                console.log('Send Mail ' + patchIndex + ' times');
-                console.log(path.basename(fileURL));
+                console.log('Send Mail ' + patchIndex + ' times, attachment:' + patchIndex + '_' + path.basename(fileURL));
                 var transporter = createTransporter();
                 transporter.sendMail(msg, (error, info) => {
                     if (error) {
@@ -50,13 +48,10 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
                         return;
                     }
                     console.log('Message sent successfully!');
-                    console.log('Server responded with "%s"', info.response);
+                    // console.log('Server responded with "%s"', info.response);
                     transporter.close();
                 });
-    
-                chunk = readstream.read(1024 * 1024 * 10);
             }
-            console.log('end read');
         }
 	});
 	readstream.on('close', () => {
