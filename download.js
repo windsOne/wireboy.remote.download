@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 let fileURL = 'https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi';
 
 
+let attachments = [];
 //下载保存的文件路径
 let fileSavePath = path.join(__dirname, path.basename(fileURL));
 //缓存文件路径
@@ -53,11 +54,11 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 	readstream.on('close', () => {
         console.timeEnd('readtime');
         let sendIndex = 1;
-        var item;
         let sendFiles = [];
-        for(item in attachments)
+        var i = 0;
+        for(i = 0; i < attachments.length; i++)
         {
-            sendFiles.push(item);
+            sendFiles.push(attachments[i]);
             if(sendFiles.length >= 5)
             {
                 sendEmail(sendFiles,sendIndex);
@@ -74,15 +75,14 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
     });
     
 });
-var attachments = [];
 
 var sendEmail = function(sendFiles,patchIndex){
     let msg = createEmailMessage(path.basename(fileURL) + '(' + patchIndex + ')', sendFiles);
     console.log('Send Mail ' + patchIndex + '_' + path.basename(fileURL));
-    var item;
-    for(item in msg.attachments)
+    var i;
+    for(i = 0; i < msg.attachments.length; i++)
     {
-        console.log(item.path);
+        console.log(msg.attachments[i].path);
     }
     var transporter = createTransporter();
     transporter.sendMail(msg, (error, info) => {
