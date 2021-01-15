@@ -6,7 +6,8 @@ const nodemailer = require('nodemailer');
 
 
 //下载 的文件 地址 （https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi）
-let fileURL = 'https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi';
+//vscode地址：https://az764295.vo.msecnd.net/stable/ea3859d4ba2f3e577a159bc91e3074c5d85c0523/VSCodeUserSetup-x64-1.52.1.exe
+let fileURL = 'https://az764295.vo.msecnd.net/stable/ea3859d4ba2f3e577a159bc91e3074c5d85c0523/VSCodeUserSetup-x64-1.52.1.exe';
 
 
 let attachments = [];
@@ -77,8 +78,8 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 });
 
 var sendEmail = function(sendFiles,patchIndex){
-    let msg = createEmailMessage(path.basename(fileURL) + '(' + patchIndex + ')', sendFiles);
-    console.log('Send Mail ' + patchIndex + '_' + path.basename(fileURL));
+    let msg = createEmailMessage(path.basename(fileURL) + '_Part' + patchIndex + '', sendFiles);
+    console.log('Send Mail Part_' + patchIndex + '   ' + path.basename(fileURL));
     var i;
     for(i = 0; i < msg.attachments.length; i++)
     {
