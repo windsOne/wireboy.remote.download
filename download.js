@@ -80,6 +80,11 @@ var sendEmail = function(sendFiles,patchIndex){
     let msg = createEmailMessage(path.basename(fileURL) + '(' + patchIndex + ')');
     msg.attachments.concat(sendFiles);
     console.log('Send Mail ' + patchIndex + '_' + path.basename(fileURL));
+    var item;
+    for(item in msg.attachments)
+    {
+        console.log(item.path);
+    }
     var transporter = createTransporter();
     transporter.sendMail(msg, (error, info) => {
         if (error) {
@@ -164,13 +169,13 @@ var createEmailMessage = function(subject){
         subject:  subject,
     
         // plaintext body
-        text: '请查阅附件',
+        // text: '请查阅附件',
     
         // Html body
         html: '<p>下载文件成功</p>',
     
         // Apple Watch specific HTML body 苹果手表指定HTML格式
-        watchHtml: '<b>Hello</b> to myself',
+        // watchHtml: '<b>Hello</b> to myself',
     
         // An array of attachments 附件
         attachments: [
