@@ -51,6 +51,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
                     // console.log('Server responded with "%s"', info.response);
                     transporter.close();
                 });
+		chunk = readstream.read(1024 * 1024 * 15);
             }
         }
 	});
