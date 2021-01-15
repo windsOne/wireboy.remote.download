@@ -58,6 +58,10 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 	});
 	readstream.on('close', () => {
         console.timeEnd('readtime');
+        attachments.push({
+            filename: '文件分割合并器(SplitMergeFile).exe',
+            path: path.join(__dirname, 'SplitMergeFile.exe')
+        })
         let sendIndex = 1;
         let sendFiles = [];
         var i = 0;
