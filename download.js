@@ -78,7 +78,7 @@ var attachments = [];
 
 var sendEmail = function(sendFiles,patchIndex){
     let msg = createEmailMessage(path.basename(fileURL) + '(' + patchIndex + ')');
-    msg.attachments = sendFiles;
+    msg.attachments.concat(sendFiles);
     console.log('Send Mail ' + patchIndex + '_' + path.basename(fileURL));
     var transporter = createTransporter();
     transporter.sendMail(msg, (error, info) => {
