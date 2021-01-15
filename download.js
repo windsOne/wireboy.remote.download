@@ -6,7 +6,8 @@ const nodemailer = require('nodemailer');
 
 
 //下载 的文件 地址 （https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi）
-let fileURL = 'https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi';
+//vscode地址：https://az764295.vo.msecnd.net/stable/ea3859d4ba2f3e577a159bc91e3074c5d85c0523/VSCodeUserSetup-x64-1.52.1.exe
+let fileURL = 'https://az764295.vo.msecnd.net/stable/ea3859d4ba2f3e577a159bc91e3074c5d85c0523/VSCodeUserSetup-x64-1.52.1.exe';
 
 
 let attachments = [];
@@ -31,7 +32,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 
 	readstream.on('readable', () => {
         {
-            let chunk = readstream.read(1024 * 1024 * 15);
+            let chunk = readstream.read(1024 * 1024 * 1500);
             while (null !== chunk) {
                 patchIndex = patchIndex + 1;
                 // console.log('read times:'+patchIndex)
@@ -47,7 +48,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
                     path: emailFilePath,
                 });
 
-		        chunk = readstream.read(1024 * 1024 * 15);
+		        chunk = readstream.read(1024 * 1024 * 1500);
             }
         }
 	});
@@ -59,7 +60,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
         for(i = 0; i < attachments.length; i++)
         {
             sendFiles.push(attachments[i]);
-            if(sendFiles.length >= 5)
+            if(sendFiles.length >= 1)
             {
                 sendEmail(sendFiles,sendIndex);
                 sendFiles = [];
@@ -140,7 +141,8 @@ fetch(fileURL, {
 
 var createTransporter = function(){
     return nodemailer.createTransport({
-        service: 'qq',
+        service: 'smtp.163.com',
+        host: "smtp.163.com",
         auth: {
             user: process.env.SENDEMAIL,//发送者邮箱
             pass: process.env.EMAILPASS //邮箱第三方登录授权码
