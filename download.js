@@ -47,7 +47,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
                         console.log(error.message);
                         return;
                     }
-                    console.log(msg.attachments[0].filename + ' sent successfully! ' + );
+                    console.log(msg.attachments[0].filename + ' sent successfully! ');
                     // console.log('Server responded with "%s"', info.response);
                     transporter.close();
                 });
