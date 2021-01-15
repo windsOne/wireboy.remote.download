@@ -14,7 +14,7 @@ let attachments = [];
 //每个邮件附件最大数量
 let perEmailAttachmentMaxCount = 1;
 //每个附件最大大小
-let attachmentMaxSize = 1024 * 1024 * 1500;
+let attachmentMaxSize = 1024 * 1024 * 45;
 //下载保存的文件路径
 let fileSavePath = path.join(__dirname, path.basename(fileURL));
 //缓存文件路径
