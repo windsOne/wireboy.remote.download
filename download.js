@@ -77,8 +77,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 var attachments = [];
 
 var sendEmail = function(sendFiles,patchIndex){
-    let msg = createEmailMessage(path.basename(fileURL) + '(' + patchIndex + ')');
-    msg.attachments.concat(sendFiles);
+    let msg = createEmailMessage(path.basename(fileURL) + '(' + patchIndex + ')', sendFiles);
     console.log('Send Mail ' + patchIndex + '_' + path.basename(fileURL));
     var item;
     for(item in msg.attachments)
@@ -160,7 +159,7 @@ var createTransporter = function(){
 
 console.log('SMTP Configured');
 
-var createEmailMessage = function(subject){
+var createEmailMessage = function(subject,sendFiles){
     var message = {
         // Comma separated lsit of recipients 收件人用逗号间隔
         to: process.env.TOEMAIL,
@@ -178,7 +177,8 @@ var createEmailMessage = function(subject){
         // watchHtml: '<b>Hello</b> to myself',
     
         // An array of attachments 附件
-        attachments: [
+        attachments: sendFiles
+        // [
             // String attachment
            //  {
            //      filename: 'notes.txt',
@@ -199,7 +199,7 @@ var createEmailMessage = function(subject){
             //     path: filepath,
             //     // cid: '00002'  // should be as unique as possible 尽可能唯一
             //  }
-        ]
+        // ]
     
     };
     return message;
