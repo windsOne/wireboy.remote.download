@@ -60,7 +60,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
         for(i = 0; i < attachments.length; i++)
         {
             sendFiles.push(attachments[i]);
-            if(sendFiles.length >= 5)
+            if(sendFiles.length >= 3)
             {
                 sendEmail(sendFiles,sendIndex);
                 sendFiles = [];
