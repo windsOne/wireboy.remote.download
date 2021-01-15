@@ -26,6 +26,8 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
 	let i = 0;
 	console.time('readtime');
     let patchIndex = 0;
+
+
 	readstream.on('readable', () => {
         {
             let chunk = readstream.read(1024 * 1024 * 15);
@@ -33,33 +35,64 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
                 patchIndex = patchIndex + 1;
                 // console.log('read times:'+patchIndex)
                 // console.log(fileSavePath+'.email_'+patchIndex);
-                let emailFile = fs.createWriteStream(fileSavePath+'.email_'+patchIndex).on('finish',function(){
-    
-                })
+
+                let emailFilePath = fileSavePath+'.email_'+patchIndex;
+                let emailFile = fs.createWriteStream(emailFilePath);
                 emailFile.write(chunk);
                 emailFile.end();
-                let msg = createEmailMessage(patchIndex+'_'+path.basename(fileURL),fileSavePath+'.email_'+patchIndex,path.basename(fileURL) + '(' + patchIndex + ')');
-                console.log('Send Mail ' + patchIndex + '_' + path.basename(fileURL));
-                var transporter = createTransporter();
-                transporter.sendMail(msg, (error, info) => {
-                    if (error) {
-                        console.log('Error occurred');
-                        console.log(error.message);
-                        return;
-                    }
-                    console.log(msg.attachments[0].filename + ' sent successfully! ');
-                    // console.log('Server responded with "%s"', info.response);
-                    transporter.close();
+                
+                attachments.push({
+                    filename: patchIndex+'_'+path.basename(fileURL),
+                    path: emailFilePath,
                 });
-		chunk = readstream.read(1024 * 1024 * 15);
+
+		        chunk = readstream.read(1024 * 1024 * 15);
             }
         }
 	});
 	readstream.on('close', () => {
-		console.timeEnd('readtime');
+        console.timeEnd('readtime');
+        let sendIndex = 1;
+        var item;
+        let sendFiles = [];
+        for(item in attachments)
+        {
+            sendFiles.push(item);
+            if(sendFiles.length >= 5)
+            {
+                sendEmail(sendFiles,sendIndex);
+                sendFiles = [];
+                sendIndex += 1;
+            }
+        }
+        if(sendFiles.length > 0)
+        {
+            sendEmail(sendFiles,sendIndex);
+            sendFiles = [];
+        }
+
     });
     
 });
+var attachments = [];
+
+var sendEmail = function(sendFiles,patchIndex){
+    let msg = createEmailMessage(path.basename(fileURL) + '(' + patchIndex + ')');
+    msg.attachments = sendFiles;
+    console.log('Send Mail ' + patchIndex + '_' + path.basename(fileURL));
+    var transporter = createTransporter();
+    transporter.sendMail(msg, (error, info) => {
+        if (error) {
+            console.log('Error occurred');
+            console.log(error.message);
+            return;
+        }
+        console.log(msg.attachments[0].filename + ' sent successfully! ');
+        // console.log('Server responded with "%s"', info.response);
+        transporter.close();
+    });
+};
+
 //请求文件
 fetch(fileURL, {
     method: 'GET',
@@ -122,7 +155,7 @@ var createTransporter = function(){
 
 console.log('SMTP Configured');
 
-var createEmailMessage = function(filename,filepath,subject){
+var createEmailMessage = function(subject){
     var message = {
         // Comma separated lsit of recipients 收件人用逗号间隔
         to: process.env.TOEMAIL,
@@ -156,11 +189,11 @@ var createEmailMessage = function(filename,filepath,subject){
            //      cid: '00001'  // should be as unique as possible 尽可能唯一
            //  },
             // File Stream attachment
-            {
-                filename: filename,
-                path: filepath,
-                // cid: '00002'  // should be as unique as possible 尽可能唯一
-             }
+            // {
+            //     filename: filename,
+            //     path: filepath,
+            //     // cid: '00002'  // should be as unique as possible 尽可能唯一
+            //  }
         ]
     
     };
