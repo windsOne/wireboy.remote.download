@@ -6,8 +6,7 @@ const nodemailer = require('nodemailer');
 
 
 //下载 的文件 地址 （https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi）
-//vscode地址：https://az764295.vo.msecnd.net/stable/ea3859d4ba2f3e577a159bc91e3074c5d85c0523/VSCodeUserSetup-x64-1.52.1.exe
-let fileURL = 'https://az764295.vo.msecnd.net/stable/ea3859d4ba2f3e577a159bc91e3074c5d85c0523/VSCodeUserSetup-x64-1.52.1.exe';
+let fileURL = 'https://nodejs.org/dist/v12.18.3/node-v12.18.3-x64.msi';
 
 
 let attachments = [];
@@ -60,7 +59,7 @@ const fileStream = fs.createWriteStream(tmpFileSavePath).on('error', function (e
         for(i = 0; i < attachments.length; i++)
         {
             sendFiles.push(attachments[i]);
-            if(sendFiles.length >= 3)
+            if(sendFiles.length >= 5)
             {
                 sendEmail(sendFiles,sendIndex);
                 sendFiles = [];
@@ -92,7 +91,7 @@ var sendEmail = function(sendFiles,patchIndex){
             console.log(error.message);
             return;
         }
-        console.log(msg.attachments[0].filename + ' sent successfully! ');
+        console.log(path.basename(fileURL) + '_Part' + patchIndex + ' sent successfully! ');
         // console.log('Server responded with "%s"', info.response);
         transporter.close();
     });
